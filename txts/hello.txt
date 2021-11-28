@@ -1,0 +1,3 @@
+Hello! Welcome to CCgen, a tool for injecting and extracting covert channels 
+in network traffic pcaps. Do not hesitate to contact us for any questions or feedback.
+Have fun! 

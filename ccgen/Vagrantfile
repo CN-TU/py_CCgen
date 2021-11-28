@@ -1,0 +1,30 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "fedora/26-cloud-base"
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo dnf install -y unzip wget nano psmisc
+
+    sudo dnf install -y python-devel python-pip
+
+    sudo sudo dnf groupinstall -y "Development Tools"
+    sudo dnf install -y cmake
+
+    ##### CoW deps ####
+    sudo pip install scapy
+    sudo dnf install -y tcpdump
+
+    ##### nfqueue ####
+    sudo dnf install -y gcc-c++ redhat-rpm-config libffi libffi-devel
+    pip install /vagrant/nfqueue
+
+    ##### apache ####
+    dnf install -y httpd
+    systemctl enable httpd --now
+  SHELL
+end
