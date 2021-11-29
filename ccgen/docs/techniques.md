@@ -49,7 +49,7 @@ The cc technique implemented in **techniques/iplen.py** uses the size of the IP 
 
 ####- IP Protocol (#4)
 
-The cc technique implemented in **techniques/ipproto.py** appears in [[10]](#references). It uses different values of the *Protocol* field to hide covert values. Note that for this technique to work, the configured flowkey must be 2tuple (*srcIP, dstIP*).
+The cc technique implemented in **techniques/ipproto.py** appears in [[10]](#references). It uses different values of the *Protocol* field to hide covert values. Note that for this technique to work properly the configured flowkey must be 2tuple (*srcIP, dstIP*).
 
 - Mapping: *MappingFiles/mapping_ipproto_1bit.csv*, *MappingFiles/mapping_ipproto_2bit.csv*
 - Bits: 1,2 
@@ -63,7 +63,7 @@ In [[11]](#references) Postel proposes using the unused bits of the *Type of Ser
 
 ####- TCP/UDP source port (#6)
 
-In [[12]](#references) Gimbi et al. present different ways of using the *Source Port* field of the TCP or UDO datagrams to convey ASCII symbols. The method implemented in **techniques/srcport.py** is a simplification that directly maps port numbers with binary encoding of ASCII symbols. The mapping requires a "poff" parameter that accounts for an offset to avoid low-range source ports. Note that, to ensure a correct cc communication, the flowkey must be ideally a 3tuple (*srcIP, dstIP, protocol*), where the protocol is TCP or UDP. The original, base method proposed in [[12]](#references) appears among the [derivative](#derivative).
+In [[12]](#references) Gimbi et al. present different ways of using the *Source Port* field of the TCP or UDO datagrams to convey ASCII symbols. The method implemented in **techniques/srcport.py** is a simplification that directly maps port numbers with binary encoding of ASCII symbols. The mapping requires a "poff" parameter that accounts for an offset to avoid low-range source ports. Note that, to ensure a correct cc communication, the flowkey must be ideally a 3tuple (*srcIP, dstIP, protocol*), where the protocol is TCP or UDP. The original, base method proposed in [[12]](#references) appears among the [derivative](#derivative). Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
 
 - Mapping: *MappingFiles/mapping_8bits_off1k.csv*
 - Parameters: "poff" (value offset)
@@ -98,7 +98,7 @@ The cc technique in **techniques/ttl_r2s.py** uses the *TTL* field of the IP dat
 
 ####- TCP/UDP source port (#10)
 
-The cc technique in **techniques/srcport_r2s.py** uses the *Source Port* field of the IP datagram to hide a binary covert channel where both 0s and 1s are represented by different values. This implementation is inspired in the methods introduced in [[14]](#references). Three parameters are required: "p0" and "p1", which are the base values for "0" and "1" symbols, and "pvar" which is the maximum variation above or below base values. Take care when selecting parameter values and ensure that possible overlaps are avoided.
+The cc technique in **techniques/srcport_r2s.py** uses the *Source Port* field of the IP datagram to hide a binary covert channel where both 0s and 1s are represented by different values. This implementation is inspired in the methods introduced in [[14]](#references). Three parameters are required: "p0" and "p1", which are the base values for "0" and "1" symbols, and "pvar" which is the maximum variation above or below base values. Take care when selecting parameter values and ensure that possible overlaps are avoided. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
 
 - Mapping: *MappingFiles/mapping_srcport_r2s.csv
 - Parameters: "p0" (base value for 0), "p1" (base value for 1), "pvar" (maximum hops allowed over or under base values)
@@ -125,7 +125,7 @@ The cc technique implemented in **techniques/ipfragment.py** uses the *Fragment 
 
 ####- URG bit-pointer (#13)
 
-The cc technique implemented in **techniques/urgent.py** uses the *URG* bit of the *TCP Flags* field and the *Urgent Pointer* field of the TCP frame to hide a covert channel. Here the URG bit acts as marker: when it is set to '0', the Urgent Pointer contains up to 16 bits of information.  This technique has been proposed by Fisk et al. in [[17]](#references). The implementation here developed requires one parameter: "b2n" indicates that a *binary-to-integer* function is used instead of direct mapping. *b2n* takes 16 as value, which stands for the length of the bit-word.
+The cc technique implemented in **techniques/urgent.py** uses the *URG* bit of the *TCP Flags* field and the *Urgent Pointer* field of the TCP frame to hide a covert channel. Here the URG bit acts as marker: when it is set to '0', the Urgent Pointer contains up to 16 bits of information.  This technique has been proposed by Fisk et al. in [[17]](#references). The implementation here developed requires one parameter: "b2n" indicates that a *binary-to-integer* function is used instead of direct mapping. *b2n* takes 16 as value, which stands for the length of the bit-word. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*) or 5tuple (*srcIP, dstIP, Protocol, srcPort, dstPort*), ensuring that the protocol used is TCP (*tcp* option in the *const* field when using the *ccGen-wrapper*).
 
 - Mapping: *MappingFiles/mapping_16bits.csv*
 - Parameters:  "b2n" (for using function instead of mapping)
@@ -145,7 +145,7 @@ The cc technique implemented in **techniques/ttl_dev.py** uses the *TTL* field o
 
 ####- TCP/UDP source port (#15)
 
-Gimbi et al. present different ways of using the *Source Port* field of the TCP or UDO datagrams to convey ASCII symbols in [[12]](#references). The method in **techniques/srcport_dev.py** follows their proposal and encapsulates ASCII symbols in value increments. This implementation uses two parameters: "pmin" sets a minimum value for the source port, and "pthr" an upper threshold to start again from low values once it is surpassed.
+Gimbi et al. present different ways of using the *Source Port* field of the TCP or UDO datagrams to convey ASCII symbols in [[12]](#references). The method in **techniques/srcport_dev.py** follows their proposal and encapsulates ASCII symbols in value increments. This implementation uses two parameters: "pmin" sets a minimum value for the source port, and "pthr" an upper threshold to start again from low values once it is surpassed. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
 
 - Mapping: *MappingFiles/mapping_srcport_dev.csv*
 - Parameters: "pmin" (minimum value), "pthr" (upper threshold)
