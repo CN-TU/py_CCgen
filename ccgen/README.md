@@ -62,13 +62,10 @@ The configuration file is a plain TEXT file divided into three blocks:
 
 (*Note that, depending on the technique and flowkey used, some of these fields/parameters are not necessary.*)
 
-#### Examples of configuration files
-
+### Examples of configuration files
 
 
 **Offline injection:**
-
------
 
 	[Files]
 	input: in.pcap
@@ -84,13 +81,9 @@ The configuration file is a plain TEXT file divided into three blocks:
 	technique: ipflags
 	bits: 1
 	layer: IP
+
 	
-
------
-
 **Offline extraction:**
-
------
 
 	[Files]
 	input: out.pcap
@@ -105,12 +98,9 @@ The configuration file is a plain TEXT file divided into three blocks:
 	technique: ipflags
 	bits: 1
 	layer: IP
-		
 
 
 **Online injection:**
-
------
 
 	[Files]
 	message: message_to_inject.txt
@@ -128,13 +118,9 @@ The configuration file is a plain TEXT file divided into three blocks:
 	technique: ipflags
 	bits: 1
 	layer: IP
-	
 
------
 
 **Online extraction:**
-
------
 
 	[Files]
 	message: message_extracted.txt
