@@ -12,6 +12,7 @@ GCC_CONF_INJ_FOLDER = "wrapper/ccgen_inj_config"
 GCC_CONF_EXT_FOLDER = "wrapper/ccgen_ext_config"
 WRP_TEMP_FOLDER = "wrapper/temp"
 
+
 def DropInLists(sel,dfst1,dfst2,dfst3,dfst4,dfst5):
     fields = ['sourceIPAddress','destinationIPAddress','protocolIdentifier','sourceTransportPort','destinationTransportPort']
     key = len([element for element in sel.columns if element in fields])
@@ -27,20 +28,20 @@ def DropInLists(sel,dfst1,dfst2,dfst3,dfst4,dfst5):
         val1 = sel.iloc[0]['sourceIPAddress']
         val2 = sel.iloc[0]['destinationIPAddress']
         dfst1 = dfst1[dfst1['sourceIPAddress'] != val1]
-        dfst2 = dfst2[(dfst2['sourceIPAddress'] != val1) & (dfst2['destinationIPAddress'] != val2)]
-        dfst3 = dfst3[(dfst3['sourceIPAddress'] != val1) & (dfst3['destinationIPAddress'] != val2)]
-        dfst4 = dfst4[(dfst4['sourceIPAddress'] != val1) & (dfst4['destinationIPAddress'] != val2)]
-        dfst5 = dfst5[(dfst5['sourceIPAddress'] != val1) & (dfst5['destinationIPAddress'] != val2)]
+        dfst2 = dfst2[(dfst2['sourceIPAddress'] != val1) | (dfst2['destinationIPAddress'] != val2)]
+        dfst3 = dfst3[(dfst3['sourceIPAddress'] != val1) | (dfst3['destinationIPAddress'] != val2)]
+        dfst4 = dfst4[(dfst4['sourceIPAddress'] != val1) | (dfst4['destinationIPAddress'] != val2)]
+        dfst5 = dfst5[(dfst5['sourceIPAddress'] != val1) | (dfst5['destinationIPAddress'] != val2)]
     elif key == 3:
         val1 = sel.iloc[0]['sourceIPAddress']
         val2 = sel.iloc[0]['destinationIPAddress']
         val3 = sel.iloc[0]['protocolIdentifier']
         dfst1 = dfst1[dfst1['sourceIPAddress'] != val1]
-        dfst2 = dfst2[(dfst2['sourceIPAddress'] != val1) & (dfst2['destinationIPAddress'] != val2)]
-        dfst3 = dfst3[(dfst3['sourceIPAddress'] != val1) & (dfst3['destinationIPAddress'] != val2) & 
+        dfst2 = dfst2[(dfst2['sourceIPAddress'] != val1) | (dfst2['destinationIPAddress'] != val2)]
+        dfst3 = dfst3[(dfst3['sourceIPAddress'] != val1) | (dfst3['destinationIPAddress'] != val2) | 
             (dfst3['protocolIdentifier'] != val3)]
-        dfst4 = dfst4[(dfst4['sourceIPAddress'] != val1) & (dfst4['destinationIPAddress'] != val2) ]
-        dfst5 = dfst5[(dfst5['sourceIPAddress'] != val1) & (dfst5['destinationIPAddress'] != val2) & 
+        dfst4 = dfst4[(dfst4['sourceIPAddress'] != val1) | (dfst4['destinationIPAddress'] != val2) ]
+        dfst5 = dfst5[(dfst5['sourceIPAddress'] != val1) | (dfst5['destinationIPAddress'] != val2) | 
             (dfst5['protocolIdentifier'] != val3)]
     elif key == 4:
         val1 = sel.iloc[0]['sourceIPAddress']
@@ -48,12 +49,12 @@ def DropInLists(sel,dfst1,dfst2,dfst3,dfst4,dfst5):
         val4 = sel.iloc[0]['sourceTransportPort']
         val5 = sel.iloc[0]['destinationTransportPort']
         dfst1 = dfst1[dfst1['sourceIPAddress'] != val1]
-        dfst2 = dfst2[(dfst2['sourceIPAddress'] != val1) & (dfst2['destinationIPAddress'] != val2)]
-        dfst3 = dfst3[(dfst3['sourceIPAddress'] != val1) & (dfst3['destinationIPAddress'] != val2)]
-        dfst4 = dfst4[(dfst4['sourceIPAddress'] != val1) & (dfst4['destinationIPAddress'] != val2) & 
-            (dfst4['sourceTransportPort'] != val4) & (dfst4['destinationTransportPort'] != val5)]
-        dfst5 = dfst5[(dfst5['sourceIPAddress'] != val1) & (dfst5['destinationIPAddress'] != val2) & 
-            (dfst5['sourceTransportPort'] != val4) & (dfst5['destinationTransportPort'] != val5)]
+        dfst2 = dfst2[(dfst2['sourceIPAddress'] != val1) | (dfst2['destinationIPAddress'] != val2)]
+        dfst3 = dfst3[(dfst3['sourceIPAddress'] != val1) | (dfst3['destinationIPAddress'] != val2)]
+        dfst4 = dfst4[(dfst4['sourceIPAddress'] != val1) | (dfst4['destinationIPAddress'] != val2) | 
+            (dfst4['sourceTransportPort'] != val4) | (dfst4['destinationTransportPort'] != val5)]
+        dfst5 = dfst5[(dfst5['sourceIPAddress'] != val1) | (dfst5['destinationIPAddress'] != val2) | 
+            (dfst5['sourceTransportPort'] != val4) | (dfst5['destinationTransportPort'] != val5)]
     elif key == 5:
         val1 = sel.iloc[0]['sourceIPAddress']
         val2 = sel.iloc[0]['destinationIPAddress']
@@ -61,17 +62,16 @@ def DropInLists(sel,dfst1,dfst2,dfst3,dfst4,dfst5):
         val4 = sel.iloc[0]['sourceTransportPort']
         val5 = sel.iloc[0]['destinationTransportPort']
         dfst1 = dfst1[dfst1['sourceIPAddress'] != val1]
-        dfst2 = dfst2[(dfst2['sourceIPAddress'] != val1) & (dfst2['destinationIPAddress'] != val2)]
-        dfst3 = dfst3[(dfst3['sourceIPAddress'] != val1) & (dfst3['destinationIPAddress'] != val2) & 
+        dfst2 = dfst2[(dfst2['sourceIPAddress'] != val1) | (dfst2['destinationIPAddress'] != val2)]
+        dfst3 = dfst3[(dfst3['sourceIPAddress'] != val1) | (dfst3['destinationIPAddress'] != val2) | 
             (dfst3['protocolIdentifier'] != val3)]
-        dfst4 = dfst4[(dfst4['sourceIPAddress'] != val1) & (dfst4['destinationIPAddress'] != val2) & 
-            (dfst4['sourceTransportPort'] != val4) & (dfst4['destinationTransportPort'] != val5)]
-        dfst5 = dfst5[(dfst5['sourceIPAddress'] != val1) & (dfst5['destinationIPAddress'] != val2) & 
-            (dfst5['sourceTransportPort'] != val4) & (dfst5['destinationTransportPort'] != val5) & (dfst5['protocolIdentifier'] != val3)]
+        dfst4 = dfst4[(dfst4['sourceIPAddress'] != val1) | (dfst4['destinationIPAddress'] != val2) | 
+            (dfst4['sourceTransportPort'] != val4) | (dfst4['destinationTransportPort'] != val5)]
+        dfst5 = dfst5[(dfst5['sourceIPAddress'] != val1) | (dfst5['destinationIPAddress'] != val2) | 
+            (dfst5['sourceTransportPort'] != val4) | (dfst5['destinationTransportPort'] != val5) | (dfst5['protocolIdentifier'] != val3)]
     #print(len(dfst1),len(dfst2),len(dfst3),len(dfst4),len(dfst5))
     return dfst1,dfst2,dfst3,dfst4,dfst5
 
-#df = df[(df.col1 > 8) & (df.col2 != 'A')]
 
 def WriteInjConfigFile(configfile, cfg_data, flowkey):
 
@@ -206,6 +206,7 @@ def main():
         cfg_data['mapping'] = row['mapping']
         cfg_data['technique'] = row['technique']
         cfg_data['message'] = row['message_file']
+        const = row['const']
         rep = int(row['rep'])
         flowkey = row['key']
         req_pkts = int(nbits/cfg_data['bits'])
@@ -225,13 +226,23 @@ def main():
             sindex = "%03d" %index
             si = "%03d" %i
             dfst_small = dfst[(dfst['packetTotalCount'] > req_pkts)] # required packets + 1 (taking into account ctc)
+
+            # Additional constraints implemented ('const')
+            # 'tcp', 'udp', 'tcp/udp'
+            if const == 'tcp':
+               dfst_small = dfst_small[(dfst_small['protocolIdentifier'] == 6)] 
+            elif const == 'udp':
+               dfst_small = dfst_small[(dfst_small['protocolIdentifier'] == 17)] 
+            elif const == 'tcp/udp':
+               dfst_small = dfst_small[(dfst_small['protocolIdentifier'] == 17) | (dfst_small['protocolIdentifier'] == 6)] 
+
             if len(dfst_small) > 0:
                 sel = dfst_small.sample()
                 print("- Found matching flow!! in ", i+1, "of", rep, "for...", *row.tolist()[:-1], sep=" ")
                 if verbose:
                     print(sel.iloc[0])
-                dfst.drop(index=sel.index, inplace=True)
-                #dfst1,dfst2,dfst3,dfst4,dfst5 = DropInLists(sel,dfst1,dfst2,dfst3,dfst4,dfst5)
+                #dfst.drop(index=sel.index, inplace=True)
+                dfst1,dfst2,dfst3,dfst4,dfst5 = DropInLists(sel,dfst1,dfst2,dfst3,dfst4,dfst5)
                 cfg_data['src_ip'] = sel['sourceIPAddress'].to_numpy()
                 if flowkey != "1tup":
                     cfg_data['dst_ip'] = sel['destinationIPAddress'].to_numpy() 
