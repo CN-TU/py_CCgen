@@ -1,17 +1,16 @@
-
-#Covert Channel Techniques
+# Covert Channel Techniques
 
 FIV, Nov 2021
 
-##Introduction
+## Introduction
 
 Each available technique to inject and/or extract covert channels must have its individual python script within the [techniques] folder. Within ccgen, techniques are identified by the name of the python file; for instance, the covert timing channel technique that follows the principles published by Berk et al. in [[1]](#references) is always addressed as "timing_ber" and is implemented in the "techniques/timing_ber.py" file.
 
-##Mapping files
+## Mapping files
 
 To be usable by ccgen, each technique requires a defined mapping file. This mapping file contains necessary parameters and a scheme of values and symbols mapping. Mapping files must be built by taking into account the specific characteristics of the technique used. You will find a set of mapping files in the [MappingFiles] folder and examples of which mapping files match which technique below in the description of each specific technique.
 
-##Implemented techniques in ccGen.v2
+## Implemented techniques in ccGen.v2
 
 ccGen.v2 comes with a varied set of possible techniques to inject covert channels. We arrange them in subgroups according to the classification given in [[2]](#references):
 
@@ -21,25 +20,25 @@ ccGen.v2 comes with a varied set of possible techniques to inject covert channel
 - [Derivative](#derivative-channels)
 - [CTC Covert timing channels](#ctc-covert-timing-channels)
 
-###V2S Value to symbol correspondence
+### V2S Value to symbol correspondence
 
 In a value to symbol correspondence either one or multiple field values can correspond to the same symbol of a covert message. For example, if the size of IP packets is used to contain a binary covert message, a packet with size 40-byte size could mean '0', whereas a packet with size 60-byte could stand for '1'.
 
-####- IP Flags (#1)
+#### IP Flags (#1)
 
 The cc technique implemented in **techniques/ipflags.py** uses the *Reserved* bit and the *Don't Fragment* bit of the *IP Flags* field to hide a binary covert channel. This technique is inspired in the one published by Xu et al. in [[4]](#references).
 
 - Mapping: *MappingFiles/mapping_bin.csv*
 - Bits: 1 
 
-####- IP Identification (#2)
+#### IP Identification (#2)
 
 The cc technique implemented in **techniques/ipid.py** uses the 8-highest bits of the *Identification* field to hide a covert channel. It additionally clears the *Don't Fragment* bit of the *IP Flags* field. This technique has been proposed in several publications, e.g. [[6, 7]](#references).
 
 - Mapping: *MappingFiles/mapping_8bits.csv*
 - Bits: 8 
 
-####- IP Length (#3)
+#### IP Length (#3)
 
 The cc technique implemented in **techniques/iplen.py** uses the size of the IP *Total Length* field to hide a covert channel. The mapping requires a "poff" parameter containing the offset (in bytes) to take as minimum length (it must be higher than 20). The implementation follows the method published in [[8]](#references).
 
@@ -47,21 +46,21 @@ The cc technique implemented in **techniques/iplen.py** uses the size of the IP 
 - Parameters: "poff" (value offset)
 - Bits: 2,8 
 
-####- IP Protocol (#4)
+#### IP Protocol (#4)
 
 The cc technique implemented in **techniques/ipproto.py** appears in [[10]](#references). It uses different values of the *Protocol* field to hide covert values. Note that for this technique to work properly the configured flowkey must be 2tuple (*srcIP, dstIP*).
 
 - Mapping: *MappingFiles/mapping_ipproto_1bit.csv*, *MappingFiles/mapping_ipproto_2bit.csv*
 - Bits: 1,2 
 
-####- IP Type of Service (#5)
+#### IP Type of Service (#5)
 
 In [[11]](#references) Postel proposes using the unused bits of the *Type of Service* field of the IP datagram to convey hidden information. This cc technique is implemented in **techniques/iptos.py** and conveys six bites per packet, since the less significant bits are reserved.
 
 - Mapping: *MappingFiles/mapping_6bits.csv*
 - Bits: 6 
 
-####- TCP/UDP source port (#6)
+#### TCP/UDP source port (#6)
 
 In [[12]](#references) Gimbi et al. present different ways of using the *Source Port* field of the TCP or UDO datagrams to convey ASCII symbols. The method implemented in **techniques/srcport.py** is a simplification that directly maps port numbers with binary encoding of ASCII symbols. The mapping requires a "poff" parameter that accounts for an offset to avoid low-range source ports. Note that, to ensure a correct cc communication, the flowkey must be ideally a 3tuple (*srcIP, dstIP, protocol*), where the protocol is TCP or UDP. The original, base method proposed in [[12]](#references) appears among the [derivative](#derivative). Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
 
@@ -69,7 +68,7 @@ In [[12]](#references) Gimbi et al. present different ways of using the *Source 
 - Parameters: "poff" (value offset)
 - Bits: 8 
 
-####- TTL (#7)
+#### TTL (#7)
 
 The cc technique implemented in **techniques/ttl_v2s.py** uses the *TTL* field of the IP datagram to hide a binary covert channel as introduced in [[15]](#references).
 
@@ -77,18 +76,18 @@ The cc technique implemented in **techniques/ttl_v2s.py** uses the *TTL* field o
 - Bits: 1 
 
 
-####- IP Destination Address (#8)
+#### IP Destination Address (#8)
 
-Among other options, Girling et al. propose using the **Destination IP Address* field to hide a covert channel [[8]](#references). Note that, in this case, the receiver of the cover communication can't be in a destination device, but in a location able to sniff traffic in the range of the destination addresses used for the covert channel. The cc technique in 
+Among other options, Girling et al. propose using the *Destination IP Address* field to hide a covert channel [[8]](#references). Note that, in this case, the receiver of the cover communication can't be in a destination device, but in a location able to sniff traffic in the range of the destination addresses used for the covert channel. The cc technique in 
 **techniques/ipaddr.py** uses a "pdst" parameter that consists of a string formed by 3 octets and 4 dots, e.g., "123.103.24.", the missing octet being reserved for the value to be covertly sent. Note that this technique must be adjusted with a 1tuple (*srcIP*) flowkey to be correctly grabbed during extraction.
  
 - Mapping: *MappingFiles/mapping_ipaddr_8bits.csv*
 - Parameters: "pdst" (base for the range of allowed destination addresses)
 - Bits: 8 
 
-###Ranges as symbols
+### Ranges as symbols
 
-####- TTL (#9)
+#### TTL (#9)
 
 The cc technique in **techniques/ttl_r2s.py** uses the *TTL* field of the IP datagram to hide a binary covert channel where both 0s and 1s are represented by different values. This implementation is inspired in the methods introduced in [[14]](#references). Three parameters are required: "p0" and "p1", which are the base values for "0" and "1" symbols, and "pvar" which is the maximum number of hops allowed above or below base values. Take care when selecting parameter values and ensure that possible overlaps are avoided.
 
@@ -96,7 +95,7 @@ The cc technique in **techniques/ttl_r2s.py** uses the *TTL* field of the IP dat
 - Parameters: "p0" (base value for 0), "p1" (base value for 1), "pvar" (maximum hops allowed over or under base values)
 - Bits: 1 
 
-####- TCP/UDP source port (#10)
+#### TCP/UDP source port (#10)
 
 The cc technique in **techniques/srcport_r2s.py** uses the *Source Port* field of the IP datagram to hide a binary covert channel where both 0s and 1s are represented by different values. This implementation is inspired in the methods introduced in [[14]](#references). Three parameters are required: "p0" and "p1", which are the base values for "0" and "1" symbols, and "pvar" which is the maximum variation above or below base values. Take care when selecting parameter values and ensure that possible overlaps are avoided. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
 
@@ -104,7 +103,7 @@ The cc technique in **techniques/srcport_r2s.py** uses the *Source Port* field o
 - Parameters: "p0" (base value for 0), "p1" (base value for 1), "pvar" (maximum hops allowed over or under base values)
 - Bits: 1 
 
-####- IP Length (#11)
+#### IP Length (#11)
 
 The cc technique implemented in **techniques/iplen_r2s.py** uses the size of the IP *Total Length* field to hide a covert channel. In this implementation, four parameters are required: "p0" and "p1", which are the base lengths for "0" and "1" symbols, "pinc" is a base length increment, and "pvar" is the maximum times that "pinc" can be added or substracted to the base lengths. Take care when adjusting parameters values, otherwise a wrong selection of parameters can make the extraction not possible. The implementation is inspired the discussion in [[8]](#references), but allowing different lengths to be mapped to the same symbol in order to hamper the detection of the covert channel.
 
@@ -112,18 +111,18 @@ The cc technique implemented in **techniques/iplen_r2s.py** uses the size of the
 - Parameters: "p0" (base length for 0), "p1" (base length for 1), "pinc" (base increment), "pvar" (maximum number of times that "pinc" is allowed over or under base length values)
 - Bits: 1 
 
-###Containers
+### Containers
 
 we consider that a covert channel is hidden in *container* fields when the amount of covert information sent per packet is greater than 1 byte. Container fields are usually (but not always) accompanied by *marker* fields, which inform the receiver about the existence of covert information in the current packet. 
 
-####- IP fragment (#12)
+#### IP fragment (#12)
 
 The cc technique implemented in **techniques/ipfragment.py** uses the *Fragment offset* field of the IP frame to hide a covert channel. Here each packet can contain up to 13 bits of clandestine information. Additionally, in each modified packet, it clears the *Don't Fragment* bit and sets the *More Fragment* of the *IP Flags*. Note that this covert channel breaks protocol rules and can be easily detected or noticed by common traffic visualization tools. This option for hidding covert channels is discussed by Goher et al. in [[5]](#references).
 
 - Mapping: *MappingFiles/mapping_13bits.csv*
 - Bits: 13 
 
-####- URG bit-pointer (#13)
+#### URG bit-pointer (#13)
 
 The cc technique implemented in **techniques/urgent.py** uses the *URG* bit of the *TCP Flags* field and the *Urgent Pointer* field of the TCP frame to hide a covert channel. Here the URG bit acts as marker: when it is set to '0', the Urgent Pointer contains up to 16 bits of information.  This technique has been proposed by Fisk et al. in [[17]](#references). The implementation here developed requires one parameter: "b2n" indicates that a *binary-to-integer* function is used instead of direct mapping. *b2n* takes 16 as value, which stands for the length of the bit-word. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*) or 5tuple (*srcIP, dstIP, Protocol, srcPort, dstPort*), ensuring that the protocol used is TCP (*tcp* option in the *const* field when using the *ccGen-wrapper*).
 
@@ -131,11 +130,11 @@ The cc technique implemented in **techniques/urgent.py** uses the *URG* bit of t
 - Parameters:  "b2n" (for using function instead of mapping)
 - Bits: 16 
 
-###Derivative channels
+### Derivative channels
 
 *Derivative* channels occur when covert symbols are not directly hidden in the value of the field but in how this value changes throughout successive packets.
 
-####- TTL (#14)
+#### TTL (#14)
 
 The cc technique implemented in **techniques/ttl_dev.py** uses the *TTL* field of the IP datagram to hide a binary derivative covert channel as explained by Zander et al. in [[13]](#references).
 
@@ -143,7 +142,7 @@ The cc technique implemented in **techniques/ttl_dev.py** uses the *TTL* field o
 - Parameters: "ph" (upper TTL value), "pl" (lowest TTL value)
 - Bits: 1 
 
-####- TCP/UDP source port (#15)
+#### TCP/UDP source port (#15)
 
 Gimbi et al. present different ways of using the *Source Port* field of the TCP or UDO datagrams to convey ASCII symbols in [[12]](#references). The method in **techniques/srcport_dev.py** follows their proposal and encapsulates ASCII symbols in value increments. This implementation uses two parameters: "pmin" sets a minimum value for the source port, and "pthr" an upper threshold to start again from low values once it is surpassed. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
 
@@ -151,11 +150,11 @@ Gimbi et al. present different ways of using the *Source Port* field of the TCP 
 - Parameters: "pmin" (minimum value), "pthr" (upper threshold)
 - Bits: 8 
 
-###CTC Covert timing channels
+### CTC Covert timing channels
 
 Covert timing channels use time properties --mainly IAT (Inter-Arrival Times between packets)-- to convey hidden communication. Further descriptions of the methods implemented in ccGen.v2 con be consulted in [[3]](#references). Note that most techniques manipulate IDT (Inter-Departure Times) in origin, which transform into IATs in destination (in short, IAT = IDT + tx_delays). All techniques that uses IATs to hide covert channels must define a "pIAT" feature in the corresponding mapping file.
 
-####- BER (#16)
+#### BER (#16)
 
 Presented in [[1]](#references) by Berk et al., the cc technique implemented in **techniques/timing_ber.py** agrees on two different IDTs to mask binary symbols. This version requires a "pmask" parameter (only useful when *offline*), which sets a number of decimal places below a second to maintain the original value and simulate a residual transmission delay.
 
@@ -163,7 +162,7 @@ Presented in [[1]](#references) by Berk et al., the cc technique implemented in 
 - Parameters: "pIAT" (use of IATs), "pmask" (scale-mask to keep residual original time)
 - Bits: 1
 
-####- GAS (#17)
+#### GAS (#17)
 
 Gasior et al. presents in [[9]](#references) a timing technique that sets a time-threshold to discriminate 0s and 1s. If a given IAT is above the threshold, it will mark 1, 0 if below. This technique is implemented in **techniques/timing_gas.py**, and requires a "pthr" for the threshold and an additional "pmin" parameter (only useful when *offline*) to set a minimal transmission delay.
 
@@ -171,7 +170,7 @@ Gasior et al. presents in [[9]](#references) a timing technique that sets a time
 - Parameters: "pIAT" (use of IATs), "pthr" (time threshold), "pmin" (minimal residual transmission delay)
 - Bits: 1
 
-####- SHA (#18)
+#### SHA (#18)
 
 The technique proposed by Shah et al. [[16]](#references) is designed to interfere legitimate communications. It uses a base sample interval and adds some delay to IDTs. A covert 1 or a 0 is interpreted depending on if a given IAT is divisible by the interval or only half of it. The implementation in **techniques/timing_sha.py** uses "pw2" to define the half-interval (in seconds), "prdx" establishes a maximum for the times that two-times-"pw2" can happen between two consecutive packets, and "pmask" parameter (only useful when *offline*), which sets a number of decimal places below a second to maintain the original value and simulate a residual transmission delay.
 
@@ -180,7 +179,7 @@ The technique proposed by Shah et al. [[16]](#references) is designed to interfe
 - Bits: 1
 
 
-##References
+## References
 
 [1] Berk, V., Giani, A., & Cybenko, G. (2005). Detection of covert channel encoding in network packet delays. [Link](https://digitalcommons.dartmouth.edu/cgi/viewcontent.cgi?article=1271&context=cs_tr)
 
