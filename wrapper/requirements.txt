@@ -1,0 +1,6 @@
+
+Install "go-flows" here in and name the folder:
+[go-flows-master]
+
+Download it from:
+https://github.com/CN-TU/go-flows
