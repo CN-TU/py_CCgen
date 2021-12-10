@@ -44,7 +44,7 @@ The cc technique implemented in **techniques/iplen.py** uses the size of the IP 
 
 - Mapping: *MappingFiles/mapping_bin_off60.csv*, *MappingFiles/mapping_8bits_off50.csv*
 - Parameters: "poff" (value offset)
-- Bits: 2,8 
+- Bits: 1,8 
 
 #### IP Protocol (#4)
 
