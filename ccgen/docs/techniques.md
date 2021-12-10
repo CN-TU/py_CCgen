@@ -79,11 +79,11 @@ The cc technique implemented in **techniques/ttl_v2s.py** uses the *TTL* field o
 #### IP Destination Address (#8)
 
 Among other options, Girling et al. propose using the *Destination IP Address* field to hide a covert channel [[8]](#references). Note that, in this case, the receiver of the cover communication can't be in a destination device, but in a location able to sniff traffic in the range of the destination addresses used for the covert channel. The cc technique in 
-**techniques/ipaddr.py** uses a "pdst" parameter that consists of a string formed by 3 octets and 4 dots, e.g., "123.103.24.", the missing octet being reserved for the value to be covertly sent. Note that this technique must be adjusted with a 1tuple (*srcIP*) flowkey to be correctly grabbed during extraction.
+**techniques/ipaddr.py** uses a "pdst" parameter that consists of a string formed by 3 octets and 4 dots, e.g., "123.103.24.", the missing octet being reserved for the value to be covertly sent. It also uses a "pmin" parameter, an offset value for the last octet to be summed to the covert value (if *Bits=8*, then "pmin" must be 0) Note that this technique must be adjusted with a 1tuple (*srcIP*) flowkey to be correctly grabbed during extraction.
  
-- Mapping: *MappingFiles/mapping_ipaddr_8bits.csv*
-- Parameters: "pdst" (base for the range of allowed destination addresses)
-- Bits: 8 
+- Mapping: *MappingFiles/mapping_ipaddr_4bits.csv*, *MappingFiles/mapping_ipaddr_8bits.csv*
+- Parameters: "pdst" (base for the range of allowed destination addresses), "pmin" (minimum value for the last octet).
+- Bits: 4,8 
 
 ### Ranges as symbols
 
@@ -99,7 +99,7 @@ The cc technique in **techniques/ttl_r2s.py** uses the *TTL* field of the IP dat
 
 The cc technique in **techniques/srcport_r2s.py** uses the *Source Port* field of the IP datagram to hide a binary covert channel where both 0s and 1s are represented by different values. This implementation is inspired in the methods introduced in [[14]](#references). Three parameters are required: "p0" and "p1", which are the base values for "0" and "1" symbols, and "pvar" which is the maximum variation above or below base values. Take care when selecting parameter values and ensure that possible overlaps are avoided. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
 
-- Mapping: *MappingFiles/mapping_srcport_r2s.csv*
+- Mapping: *MappingFiles/mapping_srcport_r2s.csv
 - Parameters: "p0" (base value for 0), "p1" (base value for 1), "pvar" (maximum hops allowed over or under base values)
 - Bits: 1 
 
