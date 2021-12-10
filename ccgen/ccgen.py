@@ -99,7 +99,7 @@ def process_offline_send(config):
                 datagram = config.message.getdatagram()
                 mappedvalue = config.mapping.getmapping(datagram)
                 # if there is a message, insert it in the technique. Otherwise, do not do anything
-                if mappedvalue:
+                if mappedvalue is not None:
                     modified_frames = modified_frames + 1
                     if config.layer == 'IP' and not 'pIAT' in params:
                         config.technique.modify(frame[IP], mappedvalue, params)
