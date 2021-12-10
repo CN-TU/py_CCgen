@@ -99,7 +99,7 @@ The cc technique in **techniques/ttl_r2s.py** uses the *TTL* field of the IP dat
 
 The cc technique in **techniques/srcport_r2s.py** uses the *Source Port* field of the IP datagram to hide a binary covert channel where both 0s and 1s are represented by different values. This implementation is inspired in the methods introduced in [[14]](#references). Three parameters are required: "p0" and "p1", which are the base values for "0" and "1" symbols, and "pvar" which is the maximum variation above or below base values. Take care when selecting parameter values and ensure that possible overlaps are avoided. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
 
-- Mapping: *MappingFiles/mapping_srcport_r2s.csv
+- Mapping: *MappingFiles/mapping_srcport_r2s.csv*
 - Parameters: "p0" (base value for 0), "p1" (base value for 1), "pvar" (maximum hops allowed over or under base values)
 - Bits: 1 
 
