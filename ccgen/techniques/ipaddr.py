@@ -6,8 +6,13 @@ class CovertChannel():
 
 	def modify(self, pkt, mappedvalue, params):
 		if(mappedvalue != -1):
-			pkt[IP].dst = params['pdst']+str(mappedvalue)
+			val = int(mappedvalue)+int(params['pmin'])         
+			pkt[IP].dst = params['pdst']+str(val)
 		return pkt
 
 	def extract(self, pkt, params):
-		return int(pkt[IP].dst.split('.')[3])
+			val = int(pkt[IP].dst.split('.')[3])-int(params['pmin'])
+			if val >=0:
+				return val
+			else:
+			    return 0
