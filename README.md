@@ -18,6 +18,7 @@ This repository includes:
 - [pcaps] contains a small *test.pcap* traffic capture to test the tool and run simple examples. This pcap is a portion of the captures provided by the  MAWI Working Group Traffic Archive in https://mawi.wide.ad.jp/mawi/
 - [txts] contains *hello.txt*, an example of a short text file to be injected in covert channels. 
 - [txts_bincoded] contains *hello_bin.txt*, which is the binary codification of *hello.txt*
+- [spammer] contains several files on how to configure an infrastructure to run CCgen in the online modus.
 - [utils] includes tools for transforming data and generating flow extraction configuration files.
 - [wrapper] contains and saves relevant files related to the wrapper.
 
@@ -96,3 +97,6 @@ Extracted messages are saved as text files in this folder. *ccgen_wrapper_ext.py
 
 		> python3 utils/bin2text.py txts_bincoded/hello_bin.txt 
 
+### Running CCgen in Online-Mode
+
+To inject Covert Channels on the fly, refer to the spammer folder where we give a detailed explanation with an easy setup.
