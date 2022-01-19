@@ -12,16 +12,16 @@ Of course, the configuration in `cc.cfg`, `spammer.ini` and `listener.ini` shoul
 
 Te short explaination is that the Spammer generates semi-random packets, sends them to CC where they are crafted and sent to their final destination. THe replies are then received by the Spammer and get discarded.
 
-#Listener
+# Listener
 
 listener is a simple script, that handles incomming tcp/udp connections. Application data within the connections is dropped. This script does not reply in any way. TCP connections are teared gracefully.
 
-##configuration
+## configuration
 -------------
 
 listener.ini (or the specified configuration file) needs to contain at least a section with the key listen (Actually the listen key of the last section is used). The value needs to contain a port list with one port per line. A port needs to be specified with METHOD:port. All entries are not case sensitive.
 
-##Example:
+## Example:
 
 -------->8-------->8-------->8-------->8-------->8-------->8-------->8--------<br>
 [Stuff]<br>
@@ -30,13 +30,13 @@ Listen=TCP:1234<br>
 -------->8-------->8-------->8-------->8-------->8-------->8-------->8--------<br>
 
 
-#Spammer
+# Spammer
 
 spammer is a simple script for sending TCP/UDP data streams to a target. The
 streams are sent consecutively. A connection causes the script to exit with
 a return value of -1.
 
-##configuration
+## configuration
 -------------
 listener.ini (or the specified configuration file) needs to contain at least
 a section with the keys target and send (Actually the listen key of the last
@@ -61,7 +61,7 @@ An instruction can be:
 4. PACKETS: Number of packets to send
   Can be number or start-stop, where the latter chooses a random number between start and stop.
 
-##Example:
+## Example:
   
 -------->8-------->8-------->8-------->8-------->8-------->8-------->8--------<br>
 [ClientA]<br>
