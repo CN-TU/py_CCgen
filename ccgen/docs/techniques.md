@@ -26,14 +26,14 @@ In a value to symbol correspondence either one or multiple field values can corr
 
 #### IP Flags (#1)
 
-The cc technique implemented in **techniques/ipflags.py** uses the *Reserved* bit and the *Don't Fragment* bit of the *IP Flags* field to hide a binary covert channel. This technique is inspired in the one published by Xu et al. in [[4]](#references).
+The cc technique implemented in **techniques/ipflags.py** uses the *Reserved* bit and the *Don't Fragment* bit of the *IP Flags* field to hide a binary covert channel. This technique is inspired in the one published by Ahsan and Kundur in [[7]](#references).
 
 - Mapping: *MappingFiles/mapping_bin.csv*
 - Bits: 1 
 
 #### IP Identification (#2)
 
-The cc technique implemented in **techniques/ipid.py** uses the 8-highest bits of the *Identification* field to hide a covert channel. It additionally clears the *Don't Fragment* bit of the *IP Flags* field. This technique has been proposed in several publications, e.g. [[6, 7]](#references).
+The cc technique implemented in **techniques/ipid.py** uses the 8-highest bits of the *Identification* field to hide a covert channel. It additionally clears the *Don't Fragment* bit of the *IP Flags* field. This technique has been proposed in several publications, e.g. [[6, 4]](#references).
 
 - Mapping: *MappingFiles/mapping_8bits.csv*
 - Bits: 8 
@@ -87,6 +87,8 @@ Among other options, Girling et al. propose using the *Destination IP Address* f
 
 ### Ranges as symbols
 
+This type of covert channels maps a range of values with a covert symbol. For instance, taking again the example with the size of IP packets, any packet with a size below or equal 50-bytes could stand for `0', and then packets above 60 bytes would be `1'.
+
 #### TTL (#9)
 
 The cc technique in **techniques/ttl_r2s.py** uses the *TTL* field of the IP datagram to hide a binary covert channel where both 0s and 1s are represented by different values. This implementation is inspired in the methods introduced in [[14]](#references). Three parameters are required: "p0" and "p1", which are the base values for "0" and "1" symbols, and "pvar" which is the maximum number of hops allowed above or below base values. Take care when selecting parameter values and ensure that possible overlaps are avoided.
@@ -117,7 +119,7 @@ we consider that a covert channel is hidden in *container* fields when the amoun
 
 #### IP fragment (#12)
 
-The cc technique implemented in **techniques/ipfragment.py** uses the *Fragment offset* field of the IP frame to hide a covert channel. Here each packet can contain up to 13 bits of clandestine information. Additionally, in each modified packet, it clears the *Don't Fragment* bit and sets the *More Fragment* of the *IP Flags*. Note that this covert channel breaks protocol rules and can be easily detected or noticed by common traffic visualization tools. This option for hidding covert channels is discussed by Goher et al. in [[5]](#references).
+The cc technique implemented in **techniques/ipfragment.py** uses the *Fragment offset* field of the IP frame to hide a covert channel. Here each packet can contain up to 13 bits of clandestine information. Additionally, in each modified packet, it clears the *Don't Fragment* bit and sets the *More Fragment* of the *IP Flags*. Note that this covert channel breaks protocol rules and can be easily detected or noticed by common traffic visualization tools. This option for hiding covert channels is discussed by Goher et al. in [[5]](#references).
 
 - Mapping: *MappingFiles/mapping_13bits.csv*
 - Bits: 13 
@@ -144,7 +146,7 @@ The cc technique implemented in **techniques/ttl_dev.py** uses the *TTL* field o
 
 #### TCP/UDP source port (#15)
 
-Gimbi et al. present different ways of using the *Source Port* field of the TCP or UDO datagrams to convey ASCII symbols in [[12]](#references). The method in **techniques/srcport_dev.py** follows their proposal and encapsulates ASCII symbols in value increments. This implementation uses two parameters: "pmin" sets a minimum value for the source port, and "pthr" an upper threshold to start again from low values once it is surpassed. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
+Gimbi et al. present different ways of using the *Source Port* field of the TCP or UDP datagrams to convey ASCII symbols in [[12]](#references). The method in **techniques/srcport_dev.py** follows their proposal and encapsulates ASCII symbols in value increments. This implementation uses two parameters: "pmin" sets a minimum value for the source port, and "pthr" an upper threshold to start again from low values once it is surpassed. Note that for this technique to work properly the configured flowkey must be 3tuple (*srcIP, dstIP, Protocol*), ensuring that the protocol used is TCP or UDP (*tcp*, *udp*, or *tcp/udp* options in the *const* field when using the *ccGen-wrapper*).
 
 - Mapping: *MappingFiles/mapping_srcport_dev.csv*
 - Parameters: "pmin" (minimum value), "pthr" (upper threshold)
@@ -185,7 +187,7 @@ The technique proposed by Shah et al. [[16]](#references) is designed to interfe
 
 [2] Iglesias, F., Annessi, R., & Zseby, T. (2016). DAT detectors: uncovering TCP/IP covert channels by descriptive analytics. Security and Communication Networks, 9(15), 3011-3029. [Link](https://onlinelibrary.wiley.com/doi/epdf/10.1002/sec.1531)
 
-[3] Iglesias, F., Annessi, R., & Zseby, T. (2017). Analytic Study of Features for the Detection of Covert Timing Channels in NetworkTraffic. Journal of Cyber Security and Mobility, 245-270. [Link](https://journals.riverpublishers.com/index.php/JCSANDM/article/download/5245/3827)
+[3] Iglesias, F., Annessi, R., & Zseby, T. (2017). Analytic Study of Features for the Detection of Covert Timing Channels in Network Traffic. Journal of Cyber Security and Mobility, 245-270. [Link](https://journals.riverpublishers.com/index.php/JCSANDM/article/download/5245/3827)
 
 [4] Xu, B., Wang, J. Z., & Peng, D. Y. (2007, March). Practical protocol steganography: Hiding data in IP header. In First Asia International Conference on Modelling & Simulation (AMS'07) (pp. 584-588). IEEE. [Link](https://ieeexplore.ieee.org/abstract/document/4148725)
 
