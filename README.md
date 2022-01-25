@@ -100,3 +100,6 @@ Extracted messages are saved as text files in this folder. *ccgen_wrapper_ext.py
 ### Running CCgen in Online-Mode
 
 To inject Covert Channels on the fly, refer to the spammer folder where we give a detailed explanation with an easy setup.
+
+## Acknowledgments
+This work was supported by the project MALware cOmmunication in cRitical Infrastructures (MALORI), funded by the Austrian security research programme KIRAS of the Federal Ministry for Agriculture, Regions and Tourism (BMLRT) under grant no. 873511.
