@@ -189,6 +189,7 @@ def main():
     cfg_data['outpcap'] = outpcap
     auxpcapA = outpcap.split(".")[0]+"_auxA.pcap"
     auxpcapB = outpcap.split(".")[0]+"_auxB.pcap"
+    lastpcap = inpcap
 
     files = glob.glob(GCC_CONF_INJ_FOLDER+'/*')
     for f in files:
@@ -258,6 +259,7 @@ def main():
 
                 configfile = GCC_CONF_INJ_FOLDER+"/ccflow_"+str(sindex)+"_"+str(si)+".ini"
 
+                print(index,i,len(dfcg))
                 if index == len(dfcg) - 1 and i == rep - 1:
                     cfg_data['inpcap'] = lastpcap
                     cfg_data['outpcap'] = outpcap
