@@ -5,7 +5,7 @@ import logging
 from os import system
 import sys
 
-from scapy.all import PcapReader
+from scapy.all import PcapReader, load_layer
 from scapy.utils import PcapWriter
 from scapy.layers.inet import IP, TCP, ICMP, UDP
 
@@ -16,7 +16,7 @@ import util.iptables
 
 def _process_online(config, callback):
     import socket
-    from netfilterqueue import NetfilterQueue
+    import nfqueue
 
     iprule = util.iptables.get_iprule(config)
 
@@ -27,16 +27,20 @@ def _process_online(config, callback):
 
     socket.SO_RCVBUFFORCE = 2*1024*1024
 
-    nfqueue = NetfilterQueue()
-    nfqueue.bind(queue_num = config.iptables_queue, user_callback = callback, mode = NetfilterQueue.COPY_PACKET, range = 0xffff)
+    conn = nfqueue.Connection()
+
+    q = conn.bind(config.iptables_queue)
+    q.set_mode(0xffff, nfqueue.COPY_PACKET)
+
     try:
-        nfqueue.run(block=True)
-    except:
-        pass
+        for packet in conn:
+            scapypkt = IP(packet.payload)
+            callback(scapypkt)
+            packet.payload = bytes(scapypkt)
+            packet.mangle()
     finally:
         system('iptables -w -F ' + config.iptables_chain)
-        nfqueue.unbind()
-
+        conn.close()
 
 def process_summary(modus, config, frames):
     print("\n[Modus]", modus[1])
@@ -54,22 +58,19 @@ def process_summary(modus, config, frames):
 
 def process_online_send(config):
     def callback(pkt):
-        payload = IP(pkt.get_payload())
         datagram = config.message.getdatagram()
         mappedvalue = config.mapping.getmapping(datagram)
         # check if there is a value to map otherwise skip packet
         if mappedvalue:
-            config.technique.modify(payload, mappedvalue)
+            config.technique.modify(pkt, mappedvalue)
 
-            del payload[IP].chksum  #recalculate checksum
-            if payload.haslayer(TCP):
-                del payload[TCP].chksum
-            if payload.haslayer(ICMP):
-                del payload[ICMP].chksum
+            del pkt[IP].chksum  #recalculate checksum
+            if pkt.haslayer(TCP):
+                del pkt[TCP].chksum
+            if pkt.haslayer(ICMP):
+                del pkt[ICMP].chksum
         else:
             pass
-        pkt.set_payload(bytes(payload))
-        pkt.accept()
 
     _process_online(config, callback)
 
@@ -78,8 +79,7 @@ def process_online_receive(config):
     outputfile = open(config.message_file, 'w')
 
     def callback(pkt):
-        payload = IP(pkt.get_payload())
-        received = config.technique.extract(payload)
+        received = config.technique.extract(pkt)
         for i in received:
             data = config.mapping.getdata(str(i))
             print(data)
@@ -100,7 +100,7 @@ def process_offline_send(config):
                 mappedvalue = config.mapping.getmapping(datagram)
                 # if there is a message, insert it in the technique. Otherwise, do not do anything
                 if mappedvalue is not None:
-                    modified_frames += 1
+                    modified_frames = modified_frames + 1
                     if config.layer == 'IP' and not 'pIAT' in params:
                         config.technique.modify(frame[IP], mappedvalue, params)
                     #elif config.layer == 'PCAP':
@@ -125,7 +125,7 @@ def process_offline_receive(config):
     with open(config.message_file, 'w') as outfile:
         for frame in PcapReader(config.input_file):
             if not util.should_filter_frame(config, frame):
-                checked_frames += 1
+                checked_frames = checked_frames + 1
                 if config.layer == 'IP' and not 'pIAT' in params:
                     mappedvalue = config.technique.extract(frame[IP],params)
                 #elif config.layer == 'PCAP':
@@ -149,6 +149,8 @@ def main():
     # let the controller know that we're there
     print("\nTUW-CCgen.v2...")
     sys.stdout.flush()
+
+    load_layer('tls') #for TLS manipulation
 
     logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
