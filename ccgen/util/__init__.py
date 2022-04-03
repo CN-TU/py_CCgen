@@ -1,5 +1,5 @@
 from scapy.layers.inet import IP, TCP, UDP
-
+from scapy.all import load_layer
 
 def find_transport(ip):
 	if ip.haslayer(TCP):
@@ -33,6 +33,11 @@ def should_filter_frame(config, frame):
 		if config.src_port and ip[transport].sport != config.src_port:
 			return True
 		if config.dst_port and ip[transport].dport != config.dst_port:
+			return True
+
+	if config.layer=='TLS':
+		load_layer("tls") 
+		if frame.haslayer(TLS) == 0:
 			return True
 
 	return False

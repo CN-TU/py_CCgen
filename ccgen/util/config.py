@@ -143,7 +143,7 @@ def parse_config(configfile, network, direction, arg_queue=None):
     bits = cfg.getint('Channel', 'bits')
 
     layer = cfg.get('Channel', 'layer')
-    assert layer in ('IP', 'PCAP'), 'Invalid layer'
+    assert layer in ('IP', 'PCAP', 'TLS'), 'Invalid layer'
 
     #Import modular covert channel technique
     technique = "%s/../techniques/%s.py" % (path.dirname(path.abspath(__file__)), technique)
