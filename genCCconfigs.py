@@ -99,7 +99,10 @@ def WriteInjConfigFile(configfile, cfg_data, flowkey):
         f.write('[Channel]\n')
         f.write('technique: '+str(cfg_data['technique'])+'\n')
         f.write('bits: '+str(cfg_data['bits'])+'\n')
-        f.write('layer: IP')
+        if cfg_data['const']=='tls':
+            f.write('layer: TLS')
+        else:
+            f.write('layer: IP')
 
 def WriteExtConfigFile(configfile, cfg_data, flowkey, msgfile):
 
@@ -126,7 +129,10 @@ def WriteExtConfigFile(configfile, cfg_data, flowkey, msgfile):
         f.write('[Channel]\n')
         f.write('technique: '+str(cfg_data['technique'])+'\n')
         f.write('bits: '+str(cfg_data['bits'])+'\n')
-        f.write('layer: IP')
+        if cfg_data['const']=='tls':
+            f.write('layer: TLS')
+        else:
+            f.write('layer: IP')
 
 def check_input_files(args):
     file_exists = exists(args[1])
@@ -207,6 +213,7 @@ def main():
         cfg_data['mapping'] = row['mapping']
         cfg_data['technique'] = row['technique']
         cfg_data['message'] = row['message_file']
+        cfg_data['const'] = row['const']
         const = row['const']
         rep = int(row['rep'])
         flowkey = row['key']
@@ -236,6 +243,8 @@ def main():
                dfst_small = dfst_small[(dfst_small['protocolIdentifier'] == 17)] 
             elif const == 'tcp/udp':
                dfst_small = dfst_small[(dfst_small['protocolIdentifier'] == 17) | (dfst_small['protocolIdentifier'] == 6)] 
+            elif const == 'tls':
+               dfst_small = dfst_small[(dfst_small['mode(destinationTransportPort)'] == 443)] 
 
             if len(dfst_small) > 0:
                 sel = dfst_small.sample()
