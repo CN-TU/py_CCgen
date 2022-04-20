@@ -35,7 +35,7 @@ def should_filter_frame(config, frame):
 		if config.dst_port and ip[transport].dport != config.dst_port:
 			return True
 
-	if config.layer=='TLS':
+	if config.layer == 'TLS':
 		load_layer("tls") 
 		if frame.haslayer(TLS) == 0:
 			return True
