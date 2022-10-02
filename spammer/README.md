@@ -1,25 +1,25 @@
 # Generate Artificial Traffic for the Online Covert Channel
 
-This guide presents a small example on how to generate TCP and UDP packets with random content. The packets are tend to be sent to the machine crafting the packets to inject the covert message using the online modus of the CCgen.
+This guide presents a small example of how to generate TCP and UDP packets with random content. The packets tend to be sent to the machine crafting the packets to inject the covert message using the online modus of the CCgen.
 
-We rocomment that you create two Virutal Machines (VMs): a CC machine, doing the injection and a Spammer machine, generating traffic and receiving and discarting the replies (in case of TCP for example).
+We recommend that you create two Virtual Machines (VMs): a CC machine, doing the injection, and a Spammer machine, generating traffic and receiving and discarding the replies (in the case of TCP, for example).
 
-In short, you should modify spammer.ini and listener.ini based on your destination (in this case the IP address of CC). See bellow for more details about how to modify those. Then you should run `python3 spammer.py` and `python3 listener.py` on the Spammer VM. On the CC VM you should run the CCgen tool as follows:
+In short, you should modify spammer.ini and listener.ini based on your destination (in this case, the IP address of CC). See below for more details about how to modify those. Then you should run `python3 spammer.py` and `python3 listener.py` on the Spammer VM. On the CC VM, you should run the CCgen tool as follows:
 ```
 > python3 ../ccgen.py online send cc.cfg <queue-number-e.g.:0>
 ```
 Of course, the configuration in `cc.cfg`, `spammer.ini` and `listener.ini` should match
 
-Te short explaination is that the Spammer generates semi-random packets, sends them to CC where they are crafted and sent to their final destination. THe replies are then received by the Spammer and get discarded.
+The short explanation is that the Spammer generates semi-random packets and sends them to CC, where they are crafted and sent to their final destination. The replies are then received by the Spammer and get discarded.
 
 # Listener
 
-listener is a simple script, that handles incomming tcp/udp connections. Application data within the connections is dropped. This script does not reply in any way. TCP connections are teared gracefully.
+listener is a simple script that handles incoming TCP/UDP connections. Application data within the connections is dropped. This script does not reply in any way. TCP connections are torn gracefully.
 
 ## configuration
 -------------
 
-listener.ini (or the specified configuration file) needs to contain at least a section with the key listen (Actually the listen key of the last section is used). The value needs to contain a port list with one port per line. A port needs to be specified with METHOD:port. All entries are not case sensitive.
+listener.ini (or the specified configuration file) needs to contain at least a section with the key listen (Actually, the listen key of the last section is used). The value needs to contain a port list with one port per line. A port needs to be specified with METHOD:port. All entries are not case-sensitive.
 
 ## Example:
 
@@ -39,8 +39,8 @@ a return value of -1.
 ## configuration
 -------------
 listener.ini (or the specified configuration file) needs to contain at least
-a section with the keys target and send (Actually the listen key of the last
-section is used). Target is the IP address of the target and send needs to be
+a section with the keys target and send (Actually, the listen key of the last
+section is used). Target is the IP address of the target, and send needs to be
 a list of instructions with one instruction per line.<br>
 
 An instruction can be:
@@ -51,15 +51,15 @@ An instruction can be:
 
 1. CONN: Connection specification in the format METHOD:SRCHOST:SRCPORT:DSTPORT
 -  METHOD: TCP or UDP
--  SRCHOST: source IP; if unspecified the OS choses an apropriate one
--  SRCPORT: source port; if unspecified the OS choses an apropriate one
+-  SRCHOST: source IP; if unspecified, the OS chooses an appropriate one
+-  SRCPORT: source port; if unspecified, the OS chooses an appropriate one
 -  DSTPORT: destination port
 2. PATTERN: Pattern that will be sent per packet.
-  Can be a hexadecimal number starting with 0x or text.
-3. REPEAT: How often to repeate the pattern
-  Can be number or start-stop, where the latter chooses a random number between start and stop. If the resulting pattern is to long the OS or the net might fragment the packets.
+  It can be a hexadecimal number starting with 0x or text.
+3. REPEAT: How often to repeat the pattern
+  It can be a number or start-stop, where the latter chooses a random number between the start and stop. If the resulting pattern is too long, the OS or the net might fragment the packets.
 4. PACKETS: Number of packets to send
-  Can be number or start-stop, where the latter chooses a random number between start and stop.
+  It can be a number or start-stop, where the latter chooses a random number between the start and stop.
 
 ## Example:
   
