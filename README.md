@@ -1,8 +1,10 @@
 # py_CCgen
 
-Generate, inject and extract covert channels in network traffic
+**Generate, inject and extract covert channels in network traffic**
 
 FIV, Nov 2021
+
+## Citation
 
 Please, if you use CCgen for your research, refer to our paper in:
 
