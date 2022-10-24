@@ -4,6 +4,10 @@ Generate, inject and extract covert channels in network traffic
 
 FIV, Nov 2021
 
+Please, if you use CCgen for your research, refer to our paper in:
+
+Félix Iglesias, Fares Meghdouri, Robert Annessi, Tanja Zseby, "CCgen: Injecting Covert Channels into Network Traffic", Security and Communication Networks, vol. 2022, Article ID 2254959, 11 pages, 2022. https://doi.org/10.1155/2022/2254959
+
 ### Introduction
 
 This repository includes:
