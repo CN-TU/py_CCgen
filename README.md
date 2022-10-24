@@ -4,7 +4,7 @@
 
 FIV, Nov 2021
 
-## Citation
+### Citation
 
 Please, if you use CCgen for your research, refer to our paper in:
 
