@@ -10,7 +10,7 @@ CCgen.v2 is now available in [https://github.com/CN-TU/CCgen.v2](https://github.
 
 ### Citation
 
-If you use the tools od this repository for your research, plese refer to our paper in:
+If you use CCgen for your research, plese refer to our paper in:
 
 Félix Iglesias, Fares Meghdouri, Robert Annessi, Tanja Zseby, "CCgen: Injecting Covert Channels into Network Traffic", Security and Communication Networks, vol. 2022, Article ID 2254959, 11 pages, 2022. https://doi.org/10.1155/2022/2254959
 
