@@ -4,6 +4,10 @@
 
 FIV, Nov 2021
 
+### CCgen.v2
+
+CCgen.v2 is now available in [https://github.com/CN-TU/CCgen.v2](https://github.com/CN-TU/CCgen.v2)!!
+
 ### Citation
 
 If you use the tools od this repository for your research, plese refer to our paper in:
